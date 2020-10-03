@@ -1,20 +1,19 @@
-var express = require("express");
-var cors = require("cors");
-var app = express();
+const express = require("express");
+const cors = require("cors");
+const app = express();
 
 app.use(cors());
 
-var rooms = require("./src/rooms");
+const rooms = require("./src/rooms");
 
-var server = app.listen(process.env.PORT || 2000);
-console.log("server started");
+const server = require("http").createServer(app);
 
 SOCKET_LIST = {};
 
 USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
-var io = require("socket.io").listen(server);
+const io = require("socket.io")(server);
 io.set("origins", "*:*");
 io.on("connection", function(socket) {
     console.log("connection detected");
@@ -45,6 +44,9 @@ io.on("connection", function(socket) {
     UNMATCHED_USERS[socket.id] = 1;
     startMatch(socket.id);
 })
+
+server.listen(process.env.PORT || 2000);
+console.log("server started");
 
 function isAMatch(res1, res2) {
     return true;
