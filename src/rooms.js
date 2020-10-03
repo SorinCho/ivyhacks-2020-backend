@@ -37,7 +37,9 @@ async function createRoom(roomName) {
         }
     });
 
-    return (res.status === 200);
+    if (res.status === 200) {
+        return DAILYCOURL + roomName;
+    }
 }
 
 async function deleteRoom(roomName) {
