@@ -14,7 +14,7 @@ USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
 const io = require("socket.io")(server);
-io.set("origins", "*:*");
+io.origins("*:*");
 io.on("connection", function(socket) {
     console.log("connection detected");
     socket.id = makeId(10);
