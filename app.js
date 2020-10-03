@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var serv = require("http").Server(app);
+var axios = require("axios");
 
 serv.listen(process.env.PORT || 2000);
 console.log("server started");
@@ -23,6 +24,35 @@ io.sockets.on("connection", function(socket) {
         // store survey data and find match?
     });
 })
+
+ROOMSAPIENDPOINT = "https://api.daily.co/v1/rooms";
+APIKEY = "2f695f37d4c8f77a36ebb787ca4a9c271ac186161164351565ad3163a2ae6e10";
+DAILYCOURL = "https://ivyhacks-sit.daily.co/";
+
+async function getRooms() {
+    const res = await axios({
+        method: "get",
+        url: ROOMSAPIENDPOINT,
+        headers: {
+            Authorization: "Bearer " + APIKEY,
+        }
+    });
+    console.log(res.data);
+}
+
+async function createRoom(roomName) {
+    const res = await axios({
+        method: "post",
+        url: ROOMSAPIENDPOINT,
+        headers: {
+            Authorization: "Bearer " + APIKEY,
+        },
+        data: {
+            name: roomName
+        }
+    });
+    console.log(res.data);
+}
 
 setInterval(function() {
 
