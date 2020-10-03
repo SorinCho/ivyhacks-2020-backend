@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src=”/socket.io/socket.io.js”></script>
+  <script>
+    var socket = io();
+
+    socket.on('message', addMessages)
+  </script>
+  <script>
+    $(() => {
+      $("#send").click(() => {
+        console.log("SENDING");
+        sendMessage({
+          name: $("#name").val(),
+          message: $("#message").val()
+        });
+      })
+      getMessages()
+    })
+
+    function addMessages(message) {
+      $("#messages").append(`
+      <h4> ${message.name} </h4>
+      <p>  ${message.message} </p>`)
+    }
+
+    function getMessages() {
+      $.get('http://localhost:3000/messages', (data) => {
+        data.forEach(addMessages);
+      })
+      console.log("got");
+    }
+
+    function sendMessage(message) {
+      $.post('http://localhost:3000/messages', message)
+      console.log("sent");
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <br>
+    <div class="jumbotron">
+      <h1 class="display-4">Send Message</h1>
+      <br>
+      <input id="name" class="form-control" placeholder="Name">
+      <br>
+      <textarea id="message" class="form-control" placeholder="Your Message Here">
+</textarea>
+      <br>
+      <button id="send" class="btn btn-success">Send</button>
+    </div>
+    <div id="messages">
+
+    </div>
+  </div>
+  <script>
+
+  </script>
+</body>
+
+</html>

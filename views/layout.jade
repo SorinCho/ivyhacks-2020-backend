@@ -1,0 +1,17 @@
+doctype html
+head
+  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' integrity='sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z' crossorigin='anonymous')
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')
+  script(src="script.js")
+.container
+  br
+  .jumbotron
+    h1.display-4 Send Message
+    br
+    input#name.form-control(placeholder='Name')
+    br
+    textarea#message.form-control(placeholder='Your Message Here')
+    br
+    button#send.btn.btn-success Send
+  #messages
+script.
