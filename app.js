@@ -8,19 +8,26 @@ console.log("server started");
 
 SOCKET_LIST = {};
 
-var io = require("socket.io")(serv,{});
-io.sockets.on("connection", function(socket) {
-    console.log("connection detected");
-    socket.id = Math.random();
-    SOCKET_LIST[socket.id] = socket;
+var io = require("socket.io")(serv, {});
+io.sockets.on("connection", function (socket) {
+  console.log("connection detected");
+  socket.id = Math.random();
+  SOCKET_LIST[socket.id] = socket;
 
-    socket.on("disconnect", function() {
-        delete SOCKET_LIST[socket.id];
-        console.log("connection deleted");
-    });
+  setTimeout(function () {
+    console.log("sending url to client");
+    socket.emit(
+      "matched",
+      "https://ivyhacks-sit.daily.co/WGnRLqx7LQ1HqE9XtSvp"
+    );
+  }, 2000);
+  socket.on("disconnect", function () {
+    delete SOCKET_LIST[socket.id];
+    console.log("connection deleted");
+  });
 
-    socket.on("surveyComplete", function(data) {
-        console.log("survey data received");
-        // store survey data and find match?
-    });
-})
+  socket.on("surveyComplete", function (data) {
+    console.log("survey data received");
+    // store survey data and find match?
+  });
+});
