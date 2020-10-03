@@ -8,37 +8,74 @@ console.log("server started");
 
 SOCKET_LIST = {};
 
+USER_RESPONSES = {};
+UNMATCHED_USERS = {};
+
 var io = require("socket.io")(serv,{});
 io.sockets.on("connection", function(socket) {
     console.log("connection detected");
-    socket.id = Math.random();
+    socket.id = makeId(10);
     SOCKET_LIST[socket.id] = socket;
 
     socket.on("disconnect", function() {
         delete SOCKET_LIST[socket.id];
-        ROOMS[USERSROOM[socket.id]] = ROOMS[USERSROOM[socket.id]].filter(item => item !== socket.id);
-        delete USERSROOM[socket.id];
+        delete USER_RESPONSES[socket.id];
+        delete UNMATCHED_USERS[socket.id];
+        for (let room in ROOMS) {
+            if (ROOMS[room].includes(socket.id)) {
+                ROOMS[room] = ROOMS[room].filter(id => id !== socket.id);
+                break;
+            }
+        }
         console.log("connection deleted");
     });
 
-    socket.on("surveyComplete", function(data) {
-        console.log("survey data received");
-        // store survey data and find match?
-    });
+    // socket.on("surveyComplete", function(data) {
+    //     console.log("survey data received");
+    //     // store survey data and find match?
+    //     USER_RESPONSES[socket.id] = data;
+    //     UNMATCHED_USERS.add(socket.id);
+    //     startMatch(socket.id);
+    // });
+    USER_RESPONSES[socket.id] = {};
+    UNMATCHED_USERS[socket.id] = 1;
+    startMatch(socket.id);
 })
+
+function isAMatch(res1, res2) {
+    return true;
+}
+
+function startMatch(socketId) {
+    console.log("starting match");
+    const userResponse = USER_RESPONSES[socketId];
+
+    for (let id in UNMATCHED_USERS) {
+        console.log(id);
+        if (id !== socketId) {
+            otherUserResponse = USER_RESPONSES[id];
+            if (isAMatch(userResponse, otherUserResponse)) {
+                const url = putInRoom(socketId, id);
+                console.log(url);
+                SOCKET_LIST[socketId].emit("matched", url);
+                SOCKET_LIST[id].emit("matched", url);
+                return;
+            }
+        }
+    }
+
+    // what now? maybe have background process try to continuously match.
+}
 
 // roomId to list of participants in room
 ROOMS = {};
-
-// users socketId to roomId
-USERSROOM = {};
 
 function putInRoom(socketId1, socketId2) {
     for (let roomId in ROOMS) {
         if (ROOMS[roomId].length === 0) {
             ROOMS[roomId] = [socketId1, socketId2];
-            USERSROOM[socketId1] = roomId;
-            USERSROOM[socketId2] = roomId;
+            delete UNMATCHED_USERS[socketId1];
+            delete UNMATCHED_USERS[socketId2];
             return rooms.DAILYCOURL + roomId;
         }
     }
@@ -47,8 +84,8 @@ function putInRoom(socketId1, socketId2) {
 
     if (rooms.createRoom(newRoomId)) {
         ROOMS[newRoomId] = [socketId1, socketId2];
-        USERSROOM[socketId1] = newRoomId;
-        USERSROOM[socketId2] = newRoomId;
+        delete UNMATCHED_USERS[socketId1];
+        delete UNMATCHED_USERS[socketId2];
         return rooms.DAILYCOURL + newRoomId;
     }
 }
