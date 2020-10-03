@@ -39,9 +39,22 @@ io.on("connection", function (socket) {
   //     UNMATCHED_USERS[socket.id] = 1;
   //     startMatch(socket.id);
   // });
+
+  socket.on("surveyComplete", function (data) {
+    console.log("survey data received");
+    startMatch(socket.id);
+    // setTimeout(function () {
+    //   console.log("sending url to client");
+
+    //   socket.emit(
+    //     "matched",
+    //     "https://ivyhacks-sit.daily.co/WGnRLqx7LQ1HqE9XtSvp"
+    //   );
+    // }, 2000);
+  });
+
   USER_RESPONSES[socket.id] = {};
   UNMATCHED_USERS[socket.id] = 1;
-  startMatch(socket.id);
 });
 
 server.listen(process.env.PORT || 2000);
