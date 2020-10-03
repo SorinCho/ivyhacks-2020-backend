@@ -15,7 +15,7 @@ SOCKET_LIST = {};
 USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
-var io = require("socket.io")(serv,{ origins: "*:*" });
+var io = require("socket.io")(serv);
 io.sockets.on("connection", function(socket) {
     console.log("connection detected");
     socket.id = makeId(10);
