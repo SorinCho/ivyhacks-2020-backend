@@ -15,7 +15,7 @@ USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
 var io = require("socket.io").listen(server);
-io.set("origins", "*:*");
+io.set("origins", "https://lunchmeat.herokuapp.com/*");
 io.sockets.on("connection", function(socket) {
     console.log("connection detected");
     socket.id = makeId(10);
