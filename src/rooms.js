@@ -37,9 +37,7 @@ async function createRoom(roomName) {
         }
     });
 
-    if (res.status === 200) {
-        return DAILYCOURL + roomName;
-    }
+    return (res.status === 200);
 }
 
 async function deleteRoom(roomName) {
@@ -56,4 +54,5 @@ async function deleteRoom(roomName) {
 module.exports = {
     createRoom,
     deleteRoom,
+    DAILYCOURL,
 }
