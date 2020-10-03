@@ -16,7 +16,7 @@ UNMATCHED_USERS = {};
 
 var io = require("socket.io").listen(server);
 io.set("origins", "*:*");
-io.sockets.on("connection", function(socket) {
+io.on("connection", function(socket) {
     console.log("connection detected");
     socket.id = makeId(10);
     SOCKET_LIST[socket.id] = socket;
