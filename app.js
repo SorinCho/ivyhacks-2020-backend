@@ -6,14 +6,14 @@ app.use(cors());
 
 const rooms = require("./src/rooms");
 
-// const server = require("http").createServer(app);
+const server = require("http").createServer(app);
 
 SOCKET_LIST = {};
 
 USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
-const io = require("socket.io").listen(app);
+const io = require("socket.io")(server);
 io.on("connection", function (socket) {
   console.log("connection detected");
   socket.id = makeId(10);
