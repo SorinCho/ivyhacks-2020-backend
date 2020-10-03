@@ -16,8 +16,8 @@ io.sockets.on("connection", function(socket) {
 
     socket.on("disconnect", function() {
         delete SOCKET_LIST[socket.id];
-        ROOMS[USERS[socket.id]] = ROOMS[USERS[socket.id]].filter(item => item !== socket.id);
-        delete USERS[socket.id];
+        ROOMS[USERSROOM[socket.id]] = ROOMS[USERSROOM[socket.id]].filter(item => item !== socket.id);
+        delete USERSROOM[socket.id];
         console.log("connection deleted");
     });
 
@@ -31,14 +31,14 @@ io.sockets.on("connection", function(socket) {
 ROOMS = {};
 
 // users socketId to roomId
-USERS = {};
+USERSROOM = {};
 
 function putInRoom(socketId1, socketId2) {
     for (let roomId in ROOMS) {
         if (ROOMS[roomId].length === 0) {
             ROOMS[roomId] = [socketId1, socketId2];
-            USERS[socketId1] = roomId;
-            USERS[socketId2] = roomId;
+            USERSROOM[socketId1] = roomId;
+            USERSROOM[socketId2] = roomId;
             return rooms.DAILYCOURL + roomId;
         }
     }
@@ -47,8 +47,8 @@ function putInRoom(socketId1, socketId2) {
 
     if (rooms.createRoom(newRoomId)) {
         ROOMS[newRoomId] = [socketId1, socketId2];
-        USERS[socketId1] = newRoomId;
-        USERS[socketId2] = newRoomId;
+        USERSROOM[socketId1] = newRoomId;
+        USERSROOM[socketId2] = newRoomId;
         return rooms.DAILYCOURL + newRoomId;
     }
 }
