@@ -1,10 +1,15 @@
 var axios = require("axios");
-var mongoose = require('mongoose');
 
 const ROOMSAPIENDPOINT = "https://api.daily.co/v1/rooms";
 const APIKEY = "2f695f37d4c8f77a36ebb787ca4a9c271ac186161164351565ad3163a2ae6e10";
 const DAILYCOURL = "https://ivyhacks-sit.daily.co/";
-const uri = "mongodb+srv://new-user:Q8B7o3zYDlWdEFfV@cluster0.6mcs4.gcp.mongodb.net/<dbname>?retryWrites=true&w=majority";
+
+onStartup();
+
+async function onStartup() {
+    const rooms = await getRooms();
+    rooms.map(room => deleteRoom(room.name));
+}
 
 async function getRooms() {
     const res = await axios({
@@ -14,7 +19,10 @@ async function getRooms() {
             Authorization: "Bearer " + APIKEY,
         }
     });
-    console.log(res.data);
+    
+    if (res.status !== 200) return;
+    return res.data.data;
+    
 }
 
 async function createRoom(roomName) {
@@ -28,7 +36,8 @@ async function createRoom(roomName) {
             name: roomName
         }
     });
-    console.log(res.data);
+
+    return (res.status === 200);
 }
 
 async function deleteRoom(roomName) {
@@ -42,18 +51,7 @@ async function deleteRoom(roomName) {
     console.log(res.data);
 }
 
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => {
-    console.log('MongoDB Connected...')
-  })
-  .catch(err => console.log(err))
-
-
 module.exports = {
-    getRooms,
     createRoom,
     deleteRoom,
 }
