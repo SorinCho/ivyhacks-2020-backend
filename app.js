@@ -1,7 +1,10 @@
 var express = require("express");
+var cors = require("cors");
 var app = express();
 var serv = require("http").Server(app);
 var rooms = require("./src/rooms");
+
+app.use(cors());
 
 serv.listen(process.env.PORT || 2000);
 console.log("server started");
