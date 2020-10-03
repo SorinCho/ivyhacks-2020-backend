@@ -16,7 +16,7 @@ USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
 var io = require("socket.io")(serv);
-io.setMaxListeners("origins", "*:*");
+io.set("origins", "*:*");
 io.sockets.on("connection", function(socket) {
     console.log("connection detected");
     socket.id = makeId(10);
