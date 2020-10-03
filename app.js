@@ -1,10 +1,11 @@
 var express = require("express");
 var cors = require("cors");
 var app = express();
-var serv = require("http").Server(app);
-var rooms = require("./src/rooms");
 
 app.use(cors());
+
+var serv = require("http").Server(app);
+var rooms = require("./src/rooms");
 
 serv.listen(process.env.PORT || 2000);
 console.log("server started");
@@ -36,8 +37,8 @@ io.sockets.on("connection", function(socket) {
     // socket.on("surveyComplete", function(data) {
     //     console.log("survey data received");
     //     // store survey data and find match?
-    //     USER_RESPONSES[socket.id] = data;
-    //     UNMATCHED_USERS.add(socket.id);
+    //     USER_RESPONSES[socket.id] = {};
+    //     UNMATCHED_USERS[socket.id] = 1;
     //     startMatch(socket.id);
     // });
     USER_RESPONSES[socket.id] = {};
