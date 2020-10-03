@@ -4,10 +4,9 @@ var app = express();
 
 app.use(cors());
 
-var serv = require("http").Server(app);
 var rooms = require("./src/rooms");
 
-serv.listen(process.env.PORT || 2000);
+var server = app.listen(process.env.PORT || 2000);
 console.log("server started");
 
 SOCKET_LIST = {};
@@ -15,7 +14,7 @@ SOCKET_LIST = {};
 USER_RESPONSES = {};
 UNMATCHED_USERS = {};
 
-var io = require("socket.io")(serv);
+var io = require("socket.io").listen(server);
 io.set("origins", "*:*");
 io.sockets.on("connection", function(socket) {
     console.log("connection detected");
@@ -56,7 +55,6 @@ function startMatch(socketId) {
     const userResponse = USER_RESPONSES[socketId];
 
     for (let id in UNMATCHED_USERS) {
-        console.log(id);
         if (id !== socketId) {
             otherUserResponse = USER_RESPONSES[id];
             if (isAMatch(userResponse, otherUserResponse)) {
