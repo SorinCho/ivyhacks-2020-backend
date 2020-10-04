@@ -40,7 +40,9 @@ io.on("connection", function (socket) {
   //     startMatch(socket.id);
   // });
 
-  socket.on("surveyComplete", function (data) {
+  socket.on("surveyComplete", function (username, duration) {
+    console.log(username);
+    console.log(duration);
     console.log("survey data received");
     USER_RESPONSES[socket.id] = {};
     UNMATCHED_USERS[socket.id] = 1;
