@@ -42,6 +42,8 @@ io.on("connection", function (socket) {
 
   socket.on("surveyComplete", function (data) {
     console.log("survey data received");
+    USER_RESPONSES[socket.id] = {};
+    UNMATCHED_USERS[socket.id] = 1;
     startMatch(socket.id);
     // setTimeout(function () {
     //   console.log("sending url to client");
@@ -52,9 +54,6 @@ io.on("connection", function (socket) {
     //   );
     // }, 2000);
   });
-
-  USER_RESPONSES[socket.id] = {};
-  UNMATCHED_USERS[socket.id] = 1;
 });
 
 server.listen(process.env.PORT || 2000);
