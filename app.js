@@ -19,46 +19,44 @@ io.on("connection", function (socket) {
   socket.id = makeId(10);
   SOCKET_LIST[socket.id] = socket;
 
+  socket.on("leaveCall", function () {
+    disconnectFromCall();
+    console.log("left");
+  })
+
   socket.on("disconnect", function () {
     delete SOCKET_LIST[socket.id];
+    disconnectFromCall();
+    console.log("connection deleted");
+  });
+
+  function disconnectFromCall() {
     delete USER_RESPONSES[socket.id];
     delete UNMATCHED_USERS[socket.id];
     for (let room in ROOMS) {
       if (ROOMS[room].includes(socket.id)) {
         ROOMS[room] = ROOMS[room].filter((id) => id !== socket.id);
-        break;
+        if (ROOMS[room].length === 0) {
+            delete ROOMS[room];
+            rooms.deleteRoom(room);
+        } else {
+            ROOMS[room].forEach(id => {
+                SOCKET_LIST[id].emit("userLeft", { name: id });
+            });
+        }
       }
     }
-    console.log("connection deleted");
-  });
-
-  // socket.on("surveyComplete", function(data) {
-  //     console.log("survey data received");
-  //     // store survey data and find match?
-  //     USER_RESPONSES[socket.id] = {};
-  //     UNMATCHED_USERS[socket.id] = 1;
-  //     startMatch(socket.id);
-  // });
+  }
 
   socket.on("surveyComplete", function (formInput) {
     console.log("survey data received");
     USER_RESPONSES[socket.id] = formInput;
     UNMATCHED_USERS[socket.id] = 1;
     startMatch(socket.id);
-    // setTimeout(function () {
-    //   console.log("sending url to client");
-
-    //   socket.emit(
-    //     "matched",
-    //     "https://ivyhacks-sit.daily.co/WGnRLqx7LQ1HqE9XtSvp"
-    //   );
-    // }, 2000);
   });
 });
 
 server.listen(process.env.PORT || 2000);
-var port = process.env.PORT || 2000;
-console.log(port);
 console.log("server started");
 
 function isAMatch(res1, res2) {
