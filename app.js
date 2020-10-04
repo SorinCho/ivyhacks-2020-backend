@@ -31,8 +31,6 @@ io.on("connection", function (socket) {
   });
 
   function disconnectFromCall() {
-    delete USER_RESPONSES[socket.id];
-    delete UNMATCHED_USERS[socket.id];
     for (let room in ROOMS) {
       if (ROOMS[room].includes(socket.id)) {
         ROOMS[room] = ROOMS[room].filter((id) => id !== socket.id);
@@ -46,6 +44,8 @@ io.on("connection", function (socket) {
         }
       }
     }
+    delete USER_RESPONSES[socket.id];
+    delete UNMATCHED_USERS[socket.id];
   }
 
   socket.on("surveyComplete", function (formInput) {
@@ -81,8 +81,8 @@ function startMatch(socketId) {
       if (isAMatch(userResponse, otherUserResponse)) {
         const url = putInRoom(socketId, id);
         console.log(url);
-        SOCKET_LIST[socketId].emit("matched", url);
-        SOCKET_LIST[id].emit("matched", url);
+        SOCKET_LIST[socketId].emit("matched", { url , name: USER_RESPONSES[id].username} );
+        SOCKET_LIST[id].emit("matched", { url , name: USER_RESPONSES[socketId].username} );
         return;
       }
     }
