@@ -19,18 +19,30 @@ io.on("connection", function (socket) {
   socket.id = makeId(10);
   SOCKET_LIST[socket.id] = socket;
 
+  socket.on("leaveCall", function () {
+    disconnectFromCall();
+    console.log("left");
+  })
+
   socket.on("disconnect", function () {
     delete SOCKET_LIST[socket.id];
+    disconnectFromCall();
+    console.log("connection deleted");
+  });
+
+  function disconnectFromCall() {
     delete USER_RESPONSES[socket.id];
     delete UNMATCHED_USERS[socket.id];
     for (let room in ROOMS) {
       if (ROOMS[room].includes(socket.id)) {
         ROOMS[room] = ROOMS[room].filter((id) => id !== socket.id);
-        break;
+        if (ROOMS[room].length === 0) {
+            delete ROOMS[room];
+            rooms.deleteRoom(room);
+        }
       }
     }
-    console.log("connection deleted");
-  });
+  }
 
   // socket.on("surveyComplete", function(data) {
   //     console.log("survey data received");
