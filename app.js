@@ -41,7 +41,7 @@ io.on("connection", function (socket) {
             rooms.deleteRoom(room);
         } else {
             ROOMS[room].forEach(id => {
-                SOCKET_LIST[id].emit("userLeft", { name: id });
+                SOCKET_LIST[id].emit("userLeft", { name: USER_RESPONSES[id].username });
             });
         }
       }
