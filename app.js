@@ -40,11 +40,9 @@ io.on("connection", function (socket) {
   //     startMatch(socket.id);
   // });
 
-  socket.on("surveyComplete", function (username, duration) {
-    console.log(username);
-    console.log(duration);
+  socket.on("surveyComplete", function (formInput) {
     console.log("survey data received");
-    USER_RESPONSES[socket.id] = {};
+    USER_RESPONSES[socket.id] = formInput;
     UNMATCHED_USERS[socket.id] = 1;
     startMatch(socket.id);
     // setTimeout(function () {
@@ -64,7 +62,15 @@ console.log(port);
 console.log("server started");
 
 function isAMatch(res1, res2) {
-  return true;
+  if (res1.duration === res2.duration) {
+    for (var key in res1) {
+      if (key === "duration") continue;
+      if (res1[key] === res2[key]) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function startMatch(socketId) {
