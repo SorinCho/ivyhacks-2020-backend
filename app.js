@@ -81,8 +81,8 @@ function startMatch(socketId) {
       if (isAMatch(userResponse, otherUserResponse)) {
         const url = putInRoom(socketId, id);
         console.log(url);
-        SOCKET_LIST[socketId].emit("matched", { url , name: USER_RESPONSES[id].username} );
-        SOCKET_LIST[id].emit("matched", { url , name: USER_RESPONSES[socketId].username} );
+        SOCKET_LIST[socketId].emit("matched", { url , name: USER_RESPONSES[id].username, userResponse, otherUserResponse } );
+        SOCKET_LIST[id].emit("matched", { url , name: USER_RESPONSES[socketId].username, userResponse, otherUserResponse } );
         return;
       }
     }
